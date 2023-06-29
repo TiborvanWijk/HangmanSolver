@@ -17,10 +17,11 @@ public class hangmanSolverTool {
         Map<Integer, Character> lettersAndIndexOfInput;
         Scanner scanner;
         String confirmedLetters;
-
-
-
         scanner = new Scanner(System.in);
+
+        
+
+
         System.out.println("Enter the letters that you know and the ones you do not know as: \"_\"");
         System.out.println("Example: H_ll_");
         confirmedLetters = scanner.nextLine().toUpperCase();
@@ -128,27 +129,31 @@ public class hangmanSolverTool {
                 System.exit(1);
             }
 
-            System.out.println("Mathematically speaking " + mostLetter + " is the best next guess");
 
-            System.out.println("Was this guess correct? (Y/N)");
-            String awnser = scanner.nextLine().toUpperCase();
-            if (awnser.equals("Y")){
-                newWordWithKnowLetters(confirmedLetters, lettersAndIndexOfInput, totalLettersOfAllWords, mostLetter, bannedLetters);
-            }
-            else if(awnser.equals("N")){
-                totalLettersOfAllWords.remove(mostLetter);
-                bannedLetters.add(mostLetter);
-                mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
-            }
-            else {
-                mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
-            }
+            feedbackOnComputesGuess(totalLettersOfAllWords,mostLetter,confirmedLetters,scanner,bannedLetters,lettersAndIndexOfInput);
             scanner.close();
         }
 
     }
+    private static void feedbackOnComputesGuess(Map<Character, Integer> totalLettersOfAllWords, char mostLetter, String confirmedLetters,
+                                                Scanner scanner, ArrayList<Character> bannedLetters, Map<Integer, Character> lettersAndIndexOfInput) throws IOException {
+        System.out.println("Mathematically speaking " + mostLetter + " is the best next guess");
+        System.out.println("Was this guess correct? (Y/N)");
+        String answer = scanner.nextLine().toUpperCase();
+        if (answer.equals("Y")){
+            newInput(confirmedLetters, lettersAndIndexOfInput, totalLettersOfAllWords, mostLetter, bannedLetters);
+        }
+        else if(answer.equals("N")){
+            totalLettersOfAllWords.remove(mostLetter);
+            bannedLetters.add(mostLetter);
+            mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
+        }
+        else {
+            mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
+        }
+    }
 
-    private static void newWordWithKnowLetters(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput,
+    private static void newInput(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput,
                                                Map<Character, Integer> totalLettersOfAllWords, char mostLetter,
                                                ArrayList<Character> bannedLetters) throws IOException {
         String newInput;
