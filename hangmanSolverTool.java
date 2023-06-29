@@ -21,12 +21,13 @@ public class hangmanSolverTool {
 
 
         scanner = new Scanner(System.in);
-        System.out.println("Enter the letters that you know and the ones you do not know as: '_'");
+        System.out.println("Enter the letters that you know and the ones you do not know as: \"_\"");
         System.out.println("Example: H_ll_");
         confirmedLetters = scanner.nextLine().toUpperCase();
 
         lettersAndIndexOfInput = getLettersAndIndexOfInput(confirmedLetters);
-        if (lettersAndIndexOfInput.size() == 0 || !confirmedLetters.contains("_")){
+//        || !confirmedLetters.contains("_")
+        if (lettersAndIndexOfInput.size() == 0){
             System.out.println("You need to know at least one letter.");
             System.out.println("If you do not know a single letter try these in order E, T, A, O, I, N, S, R, H, and L. \n");
             start(bannedLetters);
@@ -45,19 +46,20 @@ public class hangmanSolverTool {
 
 
         for (String currentWord = reader.readLine(); currentWord != null; currentWord = reader.readLine()){
-            if (currentWord.equals(confirmedLetters)){
-                System.out.println(currentWord);
+            if (currentWord.equals(confirmedLetters) || !confirmedLetters.contains("_")){
                 System.out.println("Word is already solved");
                 System.exit(1);
             }
-            else if (matchesLettersAtIndex(currentWord, lettersAndIndexOfInput, confirmedLetters, totalLettersOfAllWords)){
-                System.out.println(currentWord);
+            else{
+                matchesLettersAtIndex(currentWord, lettersAndIndexOfInput, confirmedLetters, totalLettersOfAllWords);
             }
 
-        }
 
+
+        }
         mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
     }
+
 
     private static Map<Integer, Character> getLettersAndIndexOfInput(String confirmedLetters){
         Map<Integer, Character> lettersAndIndexOfInput = new HashMap<>();
@@ -87,6 +89,8 @@ public class hangmanSolverTool {
 
             int count = totalLettersOfAllWords.getOrDefault(currentWord.charAt(i), 0);
 
+
+
             if (!addedLetters.contains(currentWord.charAt(i)) && confirmedLetters.charAt(i) == '_' &&
                     !confirmedLetters.contains(String.valueOf(currentWord.charAt(i)))){
 
@@ -109,14 +113,19 @@ public class hangmanSolverTool {
 //            values are templates for the real value
             int max = 0;
             char mostLetter = 'a';
-
+            boolean wordExists = false;
 
             for (Map.Entry<Character, Integer> entry : totalLettersOfAllWords.entrySet()){
 
                 if (entry.getValue() > max && !bannedLetters.contains(entry.getKey())){
                     max = entry.getValue();
                     mostLetter = entry.getKey();
+                    wordExists = true;
                 }
+            }
+            if (totalLettersOfAllWords.size() == 0 || !wordExists){
+                System.out.println("Word does not exist");
+                System.exit(1);
             }
 
             System.out.println("Mathematically speaking " + mostLetter + " is the best next guess");
@@ -152,6 +161,7 @@ public class hangmanSolverTool {
 
         }while (!inputRequirements(newInput, lettersAndIndexOfInput, confirmedLetters, totalLettersOfAllWords, mostLetter));
         lettersAndIndexOfInput = getLettersAndIndexOfInput(newInput);
+
         printmatchingWords(newInput, lettersAndIndexOfInput, bannedLetters);
     }
     private static boolean inputRequirements(String input, Map<Integer, Character> lettersAndIndexOfInput,
