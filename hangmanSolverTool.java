@@ -19,19 +19,27 @@ public class hangmanSolverTool {
         String confirmedLetters;
 
 
+
         scanner = new Scanner(System.in);
-        System.out.println("Enter the letters that you know and the ones you do not know as _");
-        System.out.println("Example H_ll_");
+        System.out.println("Enter the letters that you know and the ones you do not know as: '_'");
+        System.out.println("Example: H_ll_");
         confirmedLetters = scanner.nextLine().toUpperCase();
 
         lettersAndIndexOfInput = getLettersAndIndexOfInput(confirmedLetters);
-        if (lettersAndIndexOfInput.size() == 0){
+        if (lettersAndIndexOfInput.size() == 0 || !confirmedLetters.contains("_")){
             System.out.println("You need to know at least one letter.");
+            System.out.println("If you do not know a single letter try these in order E, T, A, O, I, N, S, R, H, and L. \n");
+            start(bannedLetters);
         }
 
 
+        printmatchingWords(confirmedLetters, lettersAndIndexOfInput, bannedLetters);
 
 
+
+        scanner.close();
+    }
+    private static void printmatchingWords(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput, ArrayList<Character> bannedLetters) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Haaima Computers\\Desktop\\dictionary.txt"));
         Map<Character, Integer> totalLettersOfAllWords = new HashMap<>();
 
@@ -49,8 +57,6 @@ public class hangmanSolverTool {
         }
 
         mostLetters(totalLettersOfAllWords, bannedLetters, confirmedLetters, lettersAndIndexOfInput);
-
-        scanner.close();
     }
 
     private static Map<Integer, Character> getLettersAndIndexOfInput(String confirmedLetters){
@@ -118,8 +124,7 @@ public class hangmanSolverTool {
             System.out.println("Was this guess correct? (Y/N)");
             String awnser = scanner.nextLine().toUpperCase();
             if (awnser.equals("Y")){
-                newWordWithKnowLetters(confirmedLetters, lettersAndIndexOfInput);
-                start(bannedLetters);
+                newWordWithKnowLetters(confirmedLetters, lettersAndIndexOfInput, totalLettersOfAllWords, mostLetter, bannedLetters);
             }
             else if(awnser.equals("N")){
                 totalLettersOfAllWords.remove(mostLetter);
@@ -134,21 +139,38 @@ public class hangmanSolverTool {
 
     }
 
-    private static void newWordWithKnowLetters(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput) {
+    private static void newWordWithKnowLetters(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput,
+                                               Map<Character, Integer> totalLettersOfAllWords, char mostLetter,
+                                               ArrayList<Character> bannedLetters) throws IOException {
         String newInput;
+
         do {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter the new letter in its place");
+            System.out.println("Enter the new letter in its place. must contain " + mostLetter + ".");
             System.out.println("Previous input was: " + confirmedLetters);
             newInput = scanner.nextLine().toUpperCase();
 
-            for (Map.Entry<Integer, Character> entry : lettersAndIndexOfInput.entrySet()){
-                int index = entry.getKey();
-                int character = entry.getValue();
-
-            }
-
-
-        }while (newInput.length() != confirmedLetters.length());
+        }while (!inputRequirements(newInput, lettersAndIndexOfInput, confirmedLetters, totalLettersOfAllWords, mostLetter));
+        lettersAndIndexOfInput = getLettersAndIndexOfInput(newInput);
+        printmatchingWords(newInput, lettersAndIndexOfInput, bannedLetters);
     }
+    private static boolean inputRequirements(String input, Map<Integer, Character> lettersAndIndexOfInput,
+                                             String confirmedLetters, Map<Character, Integer> totalLettersOfAllWords, char  mostletter){
+        String mostletterString = String.valueOf(mostletter);
+
+
+
+        for (int i = 0; i < input.length(); i++){
+            if (!lettersAndIndexOfInput.containsKey(i)){
+                if (input.charAt(i) != '_' && input.charAt(i) != mostletter){
+                    return false;
+                }
+            }
+        }
+        if (!matchesLettersAtIndex(input, lettersAndIndexOfInput, confirmedLetters, totalLettersOfAllWords) || !input.contains(mostletterString)){
+            return false;
+        }
+        return true;
+    }
+
 }
