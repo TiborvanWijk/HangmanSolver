@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class hangmanSolverTool {
-    hangmanSolverTool() throws IOException {
-
+    public static void main(String[] args) throws IOException {
         ArrayList<Character> bannedLetters = new ArrayList<>();
         start(bannedLetters);
     }
@@ -38,9 +37,6 @@ public class hangmanSolverTool {
     private static void printmatchingWords(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput, ArrayList<Character> bannedLetters) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Haaima Computers\\Desktop\\dictionary.txt"));
         Map<Character, Integer> totalLettersOfAllWords = new HashMap<>();
-
-
-
 
         for (String currentWord = reader.readLine(); currentWord != null; currentWord = reader.readLine()){
             if (currentWord.equals(confirmedLetters) || !confirmedLetters.contains("_")){
@@ -91,8 +87,6 @@ public class hangmanSolverTool {
         for (int i = 0; i < currentWord.length(); i++){
 
             int count = totalLettersOfAllWords.getOrDefault(currentWord.charAt(i), 0);
-
-
 
             if (!addedLetters.contains(currentWord.charAt(i)) && confirmedLetters.charAt(i) == '_' &&
                     !confirmedLetters.contains(String.valueOf(currentWord.charAt(i)))){
@@ -152,7 +146,6 @@ public class hangmanSolverTool {
     private static void feedbackOnComputesGuess(Map<Character, Integer> totalLettersOfAllWords, char mostLetter, String confirmedLetters,
                                                 Scanner scanner, ArrayList<Character> bannedLetters, Map<Integer, Character> lettersAndIndexOfInput) throws IOException {
 
-        System.out.println(totalLettersOfAllWords);
         System.out.println("Mathematically speaking " + mostLetter + " is the best next guess");
         System.out.println("Was this guess correct? (Y/N)");
         String answer = scanner.nextLine().toUpperCase();
