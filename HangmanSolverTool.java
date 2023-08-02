@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class hangmanSolverTool {
+public class HangmanSolverTool {
     public static void main(String[] args) throws IOException {
         ArrayList<Character> bannedLetters = new ArrayList<>();
         start(bannedLetters);
