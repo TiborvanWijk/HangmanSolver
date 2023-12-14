@@ -37,7 +37,7 @@ public class HangmanSolverTool {
         scanner.close();
     }
     private void printMatchingWords(String confirmedLetters, Map<Integer, Character> lettersAndIndexOfInput) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\Haaima Computers\\Desktop\\dictionary.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("Dictionary file path goes here."));
         Map<Character, Integer> totalLettersOfAllWords = new HashMap<>();
 
         for (String currentWord = reader.readLine(); currentWord != null; currentWord = reader.readLine()){
